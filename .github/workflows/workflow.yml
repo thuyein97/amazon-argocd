@@ -1,0 +1,73 @@
+name: CICD Pipeline 
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+permissions:
+  id-token: write
+  contents: read  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure Alibaba Cloud credentials (OIDC)
+        uses: aliyun/configure-aliyun-credentials-action@v1
+        with:
+          role-to-assume: ${{ secrets.ROLETOASSUME }}
+          oidc-provider-arn: ${{ secrets.OIDC_PROVIDER }}
+          audience: ${{ secrets.AUDIENCE }}
+  
+      - name: Set K8s context
+        uses: aliyun/ack-set-context@v1
+        with:
+          access-key-id: ${{ env.ALIBABA_CLOUD_ACCESS_KEY_ID }}
+          access-key-secret: ${{ env.ALIBABA_CLOUD_ACCESS_KEY_SECRET }}
+          security-token: ${{ env.ALIBABA_CLOUD_SECURITY_TOKEN }}
+          cluster-id: c6158028f3dfc4d6c8e00daf7a9c4f3e6
+
+      # 1. Check if ArgoCD Namespace exists, create if not
+      - name: Ensure ArgoCD Namespace
+        run: |
+          kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+
+      # 2. Install/Update ArgoCD Core
+      # Using 'apply' here ensures it installs if missing or upgrades if exists
+      - name: Install or Upgrade ArgoCD
+        run: |
+          kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+      # 3. Wait for ArgoCD API Server to be ready (Only on fresh install)
+      - name: Wait for ArgoCD
+        run: |
+          kubectl wait --for=condition=available --timeout=300s deployment/argocd-server -n argocd
+
+      # 4. Apply your Application Manifests (The App-of-Apps root)
+      - name: Apply ArgoCD Apps
+        run: |
+          kubectl apply -f bootstrap/root-app.yaml
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: deploy
+    environment: staging
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Cleanup ArgoCD
+        run: |
+          kubectl delete -f bootstrap/root-app.yaml
+      
+      - name: Cleanup ArgoCD
+        run: |
+          kubectl delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+      
+      - name: Delete ArgoCD Namespace
+        run: |
+          kubectl delete namespace argocd
+
+  
