@@ -39,7 +39,7 @@ jobs:
       # Using 'apply' here ensures it installs if missing or upgrades if exists
       - name: Install or Upgrade ArgoCD
         run: |
-          kubectl apply --server-side -n argocd-f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+          kubectl apply --server-side -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
       # 3. Wait for ArgoCD API Server to be ready (Only on fresh install)
       - name: Wait for ArgoCD
