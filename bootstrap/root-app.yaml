@@ -8,7 +8,9 @@ spec:
   source:
     repoURL: 'https://github.com/thuyein97/amazon-argocd.git'
     targetRevision: HEAD
-    path: apps/  # ArgoCD will now manage everything inside this folder
+    path: apps/
+    directory: 
+      recurse: true  # ArgoCD will now manage everything inside this folder
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: default
