@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.com
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/thuyein97/amazon-argocd.git'
+    targetRevision: HEAD
+    path: apps/production
+    directory: 
+      recurse: true  # ArgoCD will now manage everything inside this folder
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
