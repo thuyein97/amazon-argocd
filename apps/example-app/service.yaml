@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app
+  namespace: apps
+spec:
+  selector:
+    app: example-app
+  ports:
+    - port: 80
+      targetPort: 80
+
