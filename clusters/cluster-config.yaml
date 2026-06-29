@@ -1,0 +1,9 @@
+apiVersion: gitops.example.io/v1alpha1
+kind: ClusterConfig
+metadata:
+  name: bankapp-eks
+spec:
+  clusterName: bankapp-eks
+  apiServer: https://FF9B6CD10B8A2022A87395E7434DB72F.yl4.ap-southeast-1.eks.amazonaws.com
+  oidcIssuerUrl: https://oidc.eks.ap-southeast-1.amazonaws.com/id/FF9B6CD10B8A2022A87395E7434DB72F
+  region: ap-southeast-1
