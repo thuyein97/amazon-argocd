@@ -4,4 +4,4 @@ resources:
 - github.com/thuyein97/amazon-prime/k8s/overlays/staging?ref=main
 images:
 - name: docker.io/thuyein97/bankapp
-  newTag: ee66aca
+  newTag: 6e60bae
