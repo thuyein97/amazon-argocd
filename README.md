@@ -1,9 +1,9 @@
-## gitops (ArgoCD app-of-apps)
+## amazon-argocd (ArgoCD app-of-apps)
 
-This folder represents the **GitOps repo**.
+This folder represents the **GitOps repo** (ArgoCD manifests).
 
 ### Repo
-- `https://github.com/thuyein97/gitops.git`
+- `https://github.com/thuyein97/amazon-argocd.git`
 
 ### Key idea
 - `clusters/cluster-config.yaml` is the **handshake bridge file** written by Terraform.
@@ -14,4 +14,3 @@ This folder represents the **GitOps repo**.
 ### Dependency mapping (base → apps)
 - `root/base-app.yaml` syncs `base/` (Ingress, monitoring, CSI drivers, etc).
 - `root/apps-app.yaml` syncs `apps/` and is annotated with `sync-wave: "1"` so it runs after base.
-
