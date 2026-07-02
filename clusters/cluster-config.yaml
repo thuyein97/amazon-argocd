@@ -4,6 +4,6 @@ metadata:
   name: bankapp-eks
 spec:
   clusterName: bankapp-eks
-  apiServer: https://80D05A3EC6DE7F42CDD549C185C8023C.gr7.ap-southeast-1.eks.amazonaws.com
-  oidcIssuerUrl: https://oidc.eks.ap-southeast-1.amazonaws.com/id/80D05A3EC6DE7F42CDD549C185C8023C
+  apiServer: https://80765769E6700E68A68167187157D82D.gr7.ap-southeast-1.eks.amazonaws.com
+  oidcIssuerUrl: https://oidc.eks.ap-southeast-1.amazonaws.com/id/80765769E6700E68A68167187157D82D
   region: ap-southeast-1
